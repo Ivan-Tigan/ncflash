@@ -16,11 +16,11 @@ type asset = {
 }
 type fee = {numerator:nat; denominator:nat}
 type ncflash_storage = {
-    lending_fees: (address * asset_id, fee) map;
+    lending_fees: (address * asset_id, fee) big_map;
 }
 
 let asset_to_transfer_ops ((asset,s): asset * ncflash_storage) = 
-    let fee_multiplier (n:nat) = match (Map.find_opt (asset.owner, asset.asset_id) s.lending_fees) with Some fee -> (n * (fee.numerator + fee.denominator))/fee.denominator | None -> n in
+    let fee_multiplier (n:nat) = match (Big_map.find_opt (asset.owner, asset.asset_id) s.lending_fees) with Some fee -> (n * (fee.numerator + fee.denominator))/fee.denominator | None -> n in
     match asset.asset_id.asset_type with 
     | Fa2 -> 
         let c = (Tezos.get_entrypoint "%transfer" asset.asset_id.contract : transfer list contract) in
@@ -80,10 +80,10 @@ let ncflash_main ((e,s): ncflash_entrypoint * ncflash_storage) =
         ops,s
 
     | Set_fee sfs -> 
-        ([]:operation list), List.fold_left (fun ((s, sf) : ncflash_storage * set_fee_args) -> { s with lending_fees = Map.add (Tezos.sender, sf.asset_id) sf.fee s.lending_fees }) s sfs
+        ([]:operation list), List.fold_left (fun ((s, sf) : ncflash_storage * set_fee_args) -> { s with lending_fees = Big_map.add (Tezos.get_sender(), sf.asset_id) sf.fee s.lending_fees }) s sfs
             
 let empty_ncflash_storage = {
-    lending_fees = (Map.empty : (address * asset_id, fee) map);
+    lending_fees = (Big_map.empty : (address * asset_id, fee) big_map);
 }
 
 
@@ -116,3 +116,8 @@ let mk_flash_loan_handler (ncflash_address:address) =
 //some fa1 KT1GT6fRR6v2chyeyNjEnZvDm2JrkSmMYLXX
 //some ncflash KT1EdBBzMvR7kWs9ParAuuhyRy9SMZS88AkG
 //some flashnop KT1VUyCyji374GbpYYQJLNUFKodF9DjGEUjP
+
+
+
+
+//KT1Uf97Avh6K4sWKYBNcs4BrZ9QWndAnHYt1

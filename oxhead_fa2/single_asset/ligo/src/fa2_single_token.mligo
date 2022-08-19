@@ -77,7 +77,7 @@ let transfer (txs, validate_op, ops_storage, ledger
           let lll = match tx.from_ with
           | None -> ll (* this is a mint transfer. do not need to update `from_` balance *)
           | Some from_ -> 
-            let u = validate_op (from_, Tezos.sender, dst.token_id, ops_storage) in
+            let u = validate_op (from_, Tezos.get_sender(), dst.token_id, ops_storage) in
             dec_balance (from_, dst.amount, ll)
           in 
           match dst.to_ with
@@ -122,7 +122,7 @@ let get_owner_hook_ops (tx_descriptors, storage
     : (transfer_descriptor list) * single_token_storage) : operation list =
   let tx_descriptor_param : transfer_descriptor_param = {
     batch = tx_descriptors;
-    operator = Tezos.sender;
+    operator = Tezos.get_sender();
   } in
   get_owner_hook_ops_for (tx_descriptor_param, storage.permissions)
 

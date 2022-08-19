@@ -14,7 +14,7 @@ let flashnoop_main (ncflash_address: address) ((e,s) : flashnoop_entrypoint * fl
     | Give_permissions asset_ids -> flash_loan_handler.give_permissions asset_ids, s
     | Begin(assets) -> flash_loan_handler.begin_flash_loan ( Bytes.pack 3n, (None : bytes contract option), assets), s
     | Handle_ncflashloan a -> 
-        let () = if Tezos.sender = ncflash_address then () else (failwith "NO_PERMISSION_NCFLASH_HANDLE" : unit) in 
+        let () = if Tezos.get_sender() = ncflash_address then () else (failwith "NO_PERMISSION_NCFLASH_HANDLE" : unit) in 
         let n = Option.unopt (Bytes.unpack a : nat option) in 
         ([]:operation list), s + n
 
