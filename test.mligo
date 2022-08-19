@@ -18,19 +18,19 @@ let test1 =
     let address_ncflash = Tezos.address contract_ncflash in
     let (taddr_flashnoop, _, _) = Test.originate (flashnoop_main(address_ncflash)) 0n 0tez in
     let contract_flashnoop = Test.to_contract taddr_flashnoop in 
-    let address_flashnoop = Tezos.address contract_flashnoop in
+    let _address_flashnoop = Tezos.address contract_flashnoop in
     let lender, borrow_activator = Test.nth_bootstrap_account 0, Test.nth_bootstrap_account 1 in 
     let taddr_fa2, contract_fa2, address_fa2 = mk_fa2_contract lender in
-    let become_lender = Test.set_source lender in 
-    let approve_lender = 
+    let _become_lender = Test.set_source lender in 
+    let _approve_lender = 
         Test.transfer_to_contract_exn 
             contract_fa2 
             (Update_operators([
                 Add_operator({ owner = lender; operator = address_ncflash; token_id = 0n; });
                 ])) 0tez in
 
-    let become_borrow_activator = Test.set_source borrow_activator in 
-    let approve_borrower = 
+    let _become_borrow_activator = Test.set_source borrow_activator in 
+    let _approve_borrower = 
         Test.transfer_to_contract_exn 
             contract_flashnoop 
             (Give_permissions
@@ -42,7 +42,7 @@ let test1 =
             ) 0tez in
     let old_storage = Test.get_storage taddr_fa2 in 
     let old_ledger = old_storage.ledger in
-    let do_flash_loan = 
+    let _do_flash_loan = 
         Test.transfer_to_contract_exn
             contract_flashnoop
             (Begin([{

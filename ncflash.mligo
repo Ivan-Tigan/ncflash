@@ -20,7 +20,7 @@ type ncflash_storage = {
 }
 
 let asset_to_transfer_ops ((asset,s): asset * ncflash_storage) = 
-    let fee_multiplier (n:nat) = match (Big_map.find_opt (asset.owner, asset.asset_id) s.lending_fees) with Some fee -> (n * (fee.numerator + fee.denominator))/fee.denominator | None -> n in
+    [@inline] let fee_multiplier (n:nat) = match (Big_map.find_opt (asset.owner, asset.asset_id) s.lending_fees) with Some fee -> (n * (fee.numerator + fee.denominator))/fee.denominator | None -> n in
     match asset.asset_id.asset_type with 
     | Fa2 -> 
         let c = (Tezos.get_entrypoint "%transfer" asset.asset_id.contract : transfer list contract) in
