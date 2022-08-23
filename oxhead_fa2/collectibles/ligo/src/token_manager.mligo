@@ -1,1 +1,0 @@
-../../../single_asset/ligo/src/token_manager.mligo

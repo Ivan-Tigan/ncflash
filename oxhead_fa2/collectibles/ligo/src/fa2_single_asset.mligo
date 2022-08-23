@@ -1,1 +1,0 @@
-../../../single_asset/ligo/src/fa2_single_asset.mligo
