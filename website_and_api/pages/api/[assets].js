@@ -171,16 +171,19 @@ export default async function handler(req, res) {
     
   data = data.filter((_, i) => allowed_data[i]);
 
-  data = await Promise.all(data.map(async d => {
+  data = (await Promise.all(data.map(async d => {
     let fee     = d.value.numerator / d.value.denominator;
     d.fee       = fee;   
     let acc     = (await (await fetch(api_testnet + 
                   `tokens/balances?account=${d.key.address}&token.contract=${d.key.contract}&&token.tokenID=${d.key.token_id}`, 
                   opts_get)).json())[0];
+    if(typeof acc === "undefined" || acc === null){
+      return "empty";
+    }
     d.metadata = acc.token.metadata;
     d.balance   = parseInt(acc.balance);
     return d;
-  }));
+  }))).filter(d => (d !== "empty"));
 
   data.sort((d1, d2) => {
     let res = 0;
