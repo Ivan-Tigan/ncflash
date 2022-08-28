@@ -4,8 +4,8 @@ NCFlash is a non-custodial flash loan smart contract that can be integrated by a
 
 Documentation: https://ivan-tsoninski.gitbook.io/ncflash/
 
-Lending Website: https://ncflash.tez.page/
+Lending Website: https://ncflash.xyz/
 
-API endpoint: https://ncflash.tez.page/api/data 
+API endpoint: https://ncflash.xyz/api/assets
 
 NCFlash Smart Contract Ghostnet Address: KT1UsUJkhrD2TRb4NmqmaoUQw3XDBdB2dKZY
