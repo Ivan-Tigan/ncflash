@@ -318,10 +318,40 @@ export default function Home() {
         // }
 
         //console.log({name, balance: (numerator / denominator).toFixed(3), contract: address, asset_type, id, cnt, enabled, fee});
-
-        return {name, balance: (numerator / denominator).toFixed(3), contract: address, 
+        let bal = numerator / denominator;
+        return {name, balance: (bal >= 0.001) ? bal.toFixed(3) : "<0.001", contract: address, 
                 asset_type, id, cnt, enabled, fee, init_enabled, init_fee};
       }));
+
+      if(!(balances.some(el => {if (el.contract === "KT1GG8Zd5rUp1XV8nMPRBY2tSyVn6NR5F4Q1") { return true;} return false;}))){
+        let enabled = await get_allowence("KT1GG8Zd5rUp1XV8nMPRBY2tSyVn6NR5F4Q1", pkh, address_testnet, 0);
+        let bigmap  = await (await fetch(api_testnet + `contracts/${address_testnet}/storage`, opts_get)).json();
+        let b       = (await (await fetch(api_testnet + 
+                       `bigmaps/${bigmap}/keys?key.address=${pkh}&key.contract=${"KT1GG8Zd5rUp1XV8nMPRBY2tSyVn6NR5F4Q1"}&key.token_id=${0}`, 
+                       opts_get)).json());
+        let a={};
+        if(typeof b !== "undefined" && typeof b[0] !== "undefined") a = b[0].value;
+        else                                                        {a.numerator = 0; a.denominator = 1;};
+        let fee          = parseFloat(parseFloat(a.numerator) / (parseFloat(a.denominator) / 100)).toFixed(2);
+        let init_fee     = fee;
+        balances.push({name: "Test Kolibri USD", balance: (0.000).toFixed(3), contract: "KT1GG8Zd5rUp1XV8nMPRBY2tSyVn6NR5F4Q1", asset_type: "fa1",
+                       id: "0", cnt: balances.length, enabled, fee, init_enabled: enabled, init_fee});
+      }
+
+      if(!(balances.some(el => {if (el.contract === "KT1Wdq6sj3ZkNqQ7CeE6kTNbJXfobMX7Eqpz") { return true;} return false;}))){
+        let enabled = await get_allowence("KT1Wdq6sj3ZkNqQ7CeE6kTNbJXfobMX7Eqpz", pkh, address_testnet, 0);
+        let bigmap  = await (await fetch(api_testnet + `contracts/${address_testnet}/storage`, opts_get)).json();
+        let b       = (await (await fetch(api_testnet + 
+                       `bigmaps/${bigmap}/keys?key.address=${pkh}&key.contract=${"KT1Wdq6sj3ZkNqQ7CeE6kTNbJXfobMX7Eqpz"}&key.token_id=${0}`, 
+                       opts_get)).json());
+        let a={};
+        if(typeof b !== "undefined" && typeof b[0] !== "undefined") a = b[0].value;
+        else                                                        {a.numerator = 0; a.denominator = 1;};
+        let fee          = parseFloat(parseFloat(a.numerator) / (parseFloat(a.denominator) / 100)).toFixed(2);
+        let init_fee     = fee;
+        balances.push({name: "Test tzBTC", balance: (0.000).toFixed(3), contract: "KT1Wdq6sj3ZkNqQ7CeE6kTNbJXfobMX7Eqpz", asset_type: "fa1",
+                       id: "0", cnt: balances.length, enabled, fee, init_enabled: enabled, init_fee});
+      }
       
       setTokens(balances); 
       //let enabled_and_fees = check fees from storage
@@ -334,20 +364,20 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>NC Flash</title>
-        <meta name="description" content="NC Flash" />
+        <title>NCFlash</title>
+        <meta name="description" content="NCFlash" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
         <h1 className={styles.title} style={{marginBottom: "40px"}}>
-          Welcome to <span style={{color: "#0070f3"}}>NC Flash</span>
+          Welcome to <span style={{color: "#0070f3"}}>NCFlash</span>
         </h1>
         {
           (pkh !== "")
           ?
             <>
-              <p>Public Key Hash: {pkh}</p>
+              {/* <p>Your address: {pkh}</p> */}
               <p>Get testnet assets: &nbsp;<a target="_blank" style={{color: "#0070f3"}} href={"https://ghostnet.quipuswap.com/swap/tez-KT19363aZDTjeRyoDkSLZhCk62pS4xfvxo6c_0"}>https://ghostnet.quipuswap.com/swap/</a></p>
               <p>Set your lending preferences:</p>
               <Table striped bordered hover variant="dark">
@@ -362,7 +392,7 @@ export default function Home() {
                 <tbody>
                   {tokens.map(token =>
                     <tr>
-                      <td>{token.name}</td>
+                      <td style={{width: "150px"}}>{token.name}</td>
                       <td>{token.balance}</td>
                       <td><input type="checkbox" defaultChecked={token.enabled} onChange={e => set(token.cnt, "enabled", e.target.checked)} /></td>
                       <td><input type="number" defaultValue={token.fee} step="0.01" min={0.01} max={100} style={{width: "60px"}} onChange={e => set(token.cnt, "fee", e.target.value)} /></td>
@@ -372,9 +402,9 @@ export default function Home() {
               </Table>
 
               <button style={{marginBottom: "20px", marginTop: "25px", padding: "7px"}} onClick={() => submit()}>Submit</button>
-              <button style={{padding: "7px"}} onClick={() => Logout()}>Logout</button>
+              <button style={{padding: "7px"}} onClick={() => Logout()}>Disconnect</button>
             </>
-          : <button style={{padding: "7px"}} onClick={() => Login()}>Login</button>
+          : <button style={{padding: "7px"}} onClick={() => Login()}>Connect Wallet</button>
         }
 
       </main>

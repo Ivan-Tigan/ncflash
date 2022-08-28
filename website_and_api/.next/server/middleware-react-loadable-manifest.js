@@ -1,1 +1,0 @@
-self.__REACT_LOADABLE_MANIFEST={"index.js -> ../lib/wallet":{"id":"index.js -> ../lib/wallet","files":["static/chunks/lib_wallet_js.js"]}}
